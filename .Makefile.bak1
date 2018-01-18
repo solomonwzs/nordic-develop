@@ -1,0 +1,89 @@
+# vim: noet:
+
+DEVICE 			= NRF52
+DEVICE_VARIANT 	= xxaa
+DEVICE_LC 		= $(shell echo $(DEVICE) | tr A-Z a-z)
+BOARD 			= BOARD_PCA10036
+
+DEBUG 		= yes
+PROG_NAME 	= main
+
+xDK_TOP 		?= /home/solomon/workspace/bluetooth/nRF5_SDK_14.2.0_17b948a
+TEMPLATE_PATH 	:= $(xDK_TOP)/components/toolchain/gcc
+
+GNU_PREFIX 	?= arm-none-eabi
+CC       	:= "$(GNU_PREFIX)-gcc"
+OBJDUMP  	:= "$(GNU_PREFIX)-objdump"
+OBJCOPY  	:= "$(GNU_PREFIX)-objcopy"
+
+SOURCES += main.c
+SOURCES += $(xDK_TOP)/components/boards/boards.c
+SOURCES += $(xDK_TOP)/components/toolchain/system_$(DEVICE_LC).c
+SOURCES += $(xDK_TOP)/components/toolchain/gcc/gcc_startup_$(DEVICE_LC).S
+
+# General C compiler flags
+CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
+CFLAGS += -fno-builtin --short-enums
+CFLAGS += -std=gnu99 -Wall -D$(DEVICE)
+
+# Linker flags (passed to gcc)
+CFLAGS += -T $(LINKER_SCRIPT)
+CFLAGS += -L $(xDK_TOP)/components/toolchain/gcc
+
+# Include search path
+CFLAGS += -I$(xDK_TOP)/config
+CFLAGS += -I$(xDK_TOP)/components/device
+CFLAGS += -I$(xDK_TOP)/components/boards
+CFLAGS += -I$(xDK_TOP)/components/drivers_nrf/nrf_soc_nosd
+CFLAGS += -I$(xDK_TOP)/components/libraries/util
+CFLAGS += -I$(xDK_TOP)/components/drivers_nrf/hal
+CFLAGS += -I$(xDK_TOP)/components/drivers_nrf/delay
+CFLAGS += -I$(xDK_TOP)/components/toolchain
+CFLAGS += -I$(xDK_TOP)/components/toolchain/gcc
+CFLAGS += -I$(xDK_TOP)/components/toolchain/cmsis/include
+
+# Set macro
+CFLAGS += -D$(DEVICE)
+CFLAGS += -D$(BOARD)
+
+# CPU related flags
+ifeq ($(DEVICE), NRF51)
+CFLAGS += -mthumb -mcpu=cortex-m0 -march=armv6-m
+LINKER_SCRIPT = $(xDK_TOP)/components/toolchain/gcc/nrf51_$(DEVICE_VARIANT).ld
+endif
+ifeq ($(DEVICE), NRF52)
+CFLAGS += -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+LINKER_SCRIPT = $(xDK_TOP)/components/toolchain/gcc/nrf52_$(DEVICE_VARIANT).ld
+endif
+
+ifeq ($(DEBUG), yes)
+CFLAGS += -O -ggdb
+else
+CFLAGS += -O3
+endif
+
+
+all:
+	@echo -e "\033[0;32m[Build]\033[0m $(PROG_NAME)"
+	@echo -e "\033[0;33m[Compile]\033[0m $(PROG_NAME).elf"
+	@$(CC) $(CFLAGS) $(SOURCES) -o $(PROG_NAME).elf
+	@echo -e "\033[0;33m[Create]\033[0m $(PROG_NAME).hex"
+	@$(OBJCOPY) -Oihex $(PROG_NAME).elf   $(PROG_NAME).hex
+	@echo -e "\033[0;33m[Create]\033[0m $(PROG_NAME).bin"
+	@$(OBJCOPY) -Obinary $(PROG_NAME).elf $(PROG_NAME).bin
+	@echo -e "\033[0;32m[OK]\033[0m build ok"
+
+flash:all
+	@echo -e "\033[0;32m[Flash]\033[0m $(PROG_NAME).hex"
+	@echo -e "\033[0;33m[Load]\033[0m"
+	@nrfjprog --family $(DEVICE) --program $(PROG_NAME).hex --chiperase --verify
+	@echo -e "\033[0;33m[Reset]\033[0m"
+	@nrfjprog --family $(DEVICE) --reset
+	@echo -e "\033[0;32m[OK]\033[0m flash ok"
+
+debug:
+	@make -C . DEBUG=yes
+
+clean:
+	@rm "$(PROG_NAME).elf" "$(PROG_NAME).hex" "$(PROG_NAME).bin"
+	@echo -e "\033[0;32m[OK]\033[0m clean ok"
