@@ -19,7 +19,8 @@ __TARGETS = f"{__DEVICE_LC}_{DEVICE_VARIANT}"
 LINKER_SCRIPT = f"{SDK_ROOT}/components/toolchain/gcc/{__DEVICE_LC}_{DEVICE_VARIANT}.ld"
 
 SRC_FILES = [
-    "main.c",
+    "src/main.c",
+    "src/led.c",
     f"{SDK_ROOT}/components/boards/boards.c",
     f"{SDK_ROOT}/components/toolchain/system_{__DEVICE_LC}.c",
     f"{SDK_ROOT}/components/toolchain/gcc/gcc_startup_{__DEVICE_LC}.S",
@@ -33,6 +34,7 @@ SRC_FILES = [
 
 INC_FOLDERS = [
     f"{SDK_ROOT}/config",
+    f"{SDK_ROOT}/components/softdevice/s140/headers",
     f"{SDK_ROOT}/components/device",
     f"{SDK_ROOT}/components/boards",
     f"{SDK_ROOT}/components/drivers_nrf/nrf_soc_nosd",

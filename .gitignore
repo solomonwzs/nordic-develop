@@ -1,0 +1,6 @@
+*.swp
+_build/
+_makefile/
+cscope*
+*.vim
+.*
