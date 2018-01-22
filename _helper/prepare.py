@@ -45,6 +45,7 @@ INC_FOLDERS = [
     f"{SDK_ROOT}/components/toolchain/gcc",
     f"{SDK_ROOT}/components/toolchain/cmsis/include",
     f"{SDK_ROOT}/external/segger_rtt",
+    f"{SDK_ROOT}/components/serialization/application/codecs/ble/serializers",
 ]
 
 MACRO = [
@@ -53,7 +54,6 @@ MACRO = [
 ]
 
 CFLAGS = [
-    "-O -ggdb",
     "-Wall",
     "-Werror",
 
@@ -155,6 +155,11 @@ def generate_cscope():
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] == "makefile":
+            CFLAGS.append("-O3")
+            generate_makefile()
+        elif sys.argv[1] == "dmakefile":
+            MACRO.append("DEBUG")
+            CFLAGS.append("-O -ggdb")
             generate_makefile()
         elif sys.argv[1] == "vim":
             generate_vim_syntastic()

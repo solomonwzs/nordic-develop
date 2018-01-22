@@ -5,8 +5,10 @@
 #include "boards.h"
 #include "nrf.h"
 #include "nrf_delay.h"
-#include "SEGGER_RTT.h"
+#include "nrf_nvic.h"
+#include "utils.h"
 
 extern void led_blinking();
+extern void wait_key();
 
 #endif

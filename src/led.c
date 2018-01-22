@@ -3,8 +3,7 @@
 
 static void
 print_mac_address() {
-  SEGGER_RTT_printf(0, "%x %x\n",
-                    NRF_FICR->DEVICEADDR[0], NRF_FICR->DEVICEADDR[1]);
+  dlog("%x %x\n", NRF_FICR->DEVICEADDR[0], NRF_FICR->DEVICEADDR[1]);
 }
 
 
@@ -18,6 +17,21 @@ led_blinking() {
       nrf_delay_ms(500);
 
       print_mac_address();
+    }
+  }
+}
+
+
+void
+wait_key() {
+  char c = 0;
+  while (true) {
+    c = SEGGER_RTT_WaitKey();
+    if (c == 'r') {
+      SEGGER_RTT_printf(0, "%sResetting in %d second..%s\n",
+                        RTT_CTRL_BG_BRIGHT_RED, 1, RTT_CTRL_RESET);
+      nrf_delay_ms(1000);
+      sd_nvic_SystemReset();
     }
   }
 }
