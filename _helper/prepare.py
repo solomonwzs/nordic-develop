@@ -21,6 +21,9 @@ LINKER_SCRIPT = f"{SDK_ROOT}/components/toolchain/gcc/{__DEVICE_LC}_{DEVICE_VARI
 SRC_FILES = [
     "src/main.c",
     "src/led.c",
+
+    f"{SDK_ROOT}/components/iot/socket/common/socket.c",
+
     f"{SDK_ROOT}/components/boards/boards.c",
     f"{SDK_ROOT}/components/toolchain/system_{__DEVICE_LC}.c",
     f"{SDK_ROOT}/components/toolchain/gcc/gcc_startup_{__DEVICE_LC}.S",
@@ -30,10 +33,17 @@ SRC_FILES = [
     f"{SDK_ROOT}/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c",
 
     f"{SDK_ROOT}/components/libraries/util/app_util_platform.c",
+
+#     f"{SDK_ROOT}/components/iot/socket/libraries/addr_util/inet_pton.c",
+#     f"{SDK_ROOT}/components/iot/socket/common/sleep.c",
+#     f"{SDK_ROOT}/components/iot/socket/platform/ble/socket_ble.c",
+#     f"{SDK_ROOT}/components/iot/errno/errno.c",
+#     f"{SDK_ROOT}/components/libraries/scheduler/app_scheduler.c",
+#     f"{SDK_ROOT}/components/libraries/mem_manager/mem_manager.c",
 ]
 
 INC_FOLDERS = [
-    f"{SDK_ROOT}/config",
+    f"./config",
     f"{SDK_ROOT}/components/softdevice/s140/headers",
     f"{SDK_ROOT}/components/device",
     f"{SDK_ROOT}/components/boards",
@@ -46,6 +56,19 @@ INC_FOLDERS = [
     f"{SDK_ROOT}/components/toolchain/cmsis/include",
     f"{SDK_ROOT}/external/segger_rtt",
     f"{SDK_ROOT}/components/serialization/application/codecs/ble/serializers",
+
+    f"{SDK_ROOT}/components/iot/socket/api",
+    f"{SDK_ROOT}/components/iot/common",
+
+    f"{SDK_ROOT}/components/libraries/scheduler",
+    f"{SDK_ROOT}/components/libraries/timer",
+    f"{SDK_ROOT}/components/libraries/balloc",
+    f"{SDK_ROOT}/components/libraries/experimental_memobj",
+    f"{SDK_ROOT}/components/libraries/experimental_log",
+    f"{SDK_ROOT}/components/libraries/experimental_log/src",
+    f"{SDK_ROOT}/components/iot/socket/libraries/portdb",
+    f"{SDK_ROOT}/components/libraries/mem_manager",
+    f"{SDK_ROOT}/components/iot/ipv6_parse",
 ]
 
 MACRO = [
@@ -55,7 +78,7 @@ MACRO = [
 
 CFLAGS = [
     "-Wall",
-    "-Werror",
+    # "-Werror",
 
     "-mcpu=cortex-m4",
     "-mthumb",
@@ -166,6 +189,8 @@ if __name__ == "__main__":
         elif sys.argv[1] == "cscope":
             generate_cscope()
     else:
+        MACRO.append("DEBUG")
+        CFLAGS.append("-O -ggdb")
         generate_makefile()
         generate_vim_syntastic()
         generate_cscope()
