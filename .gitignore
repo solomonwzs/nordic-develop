@@ -4,3 +4,4 @@ _makefile/
 cscope*
 *.vim
 .*
+__pycache__/
