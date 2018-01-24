@@ -4,18 +4,19 @@
 import common
 from common import (
     SDK_ROOT,
+    list_union,
 )
 
-__SRC = set([
+__SRC = [
     f"{SDK_ROOT}/external/segger_rtt/SEGGER_RTT_printf.c",
     f"{SDK_ROOT}/external/segger_rtt/SEGGER_RTT.c",
     f"{SDK_ROOT}/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c",
-])
+]
 
-__INC = set([
+__INC = [
     f"{SDK_ROOT}/external/segger_rtt",
-])
+]
 
 def add_rtt_support():
-    common.SRC_FILES.update(__SRC)
-    common.INC_FOLDERS.update(__INC)
+    list_union(common.SRC_FILES, __SRC)
+    list_union(common.INC_FOLDERS, __INC)

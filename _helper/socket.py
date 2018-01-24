@@ -4,10 +4,11 @@
 from common import (
     SXXX,
     SDK_ROOT,
+    list_union,
 )
 import common
 
-__SRC = set([
+__SRC = [
     f"{SDK_ROOT}/components/libraries/experimental_log/src/nrf_log_backend_rtt.c",
     f"{SDK_ROOT}/components/libraries/experimental_log/src/nrf_log_backend_serial.c",
     f"{SDK_ROOT}/components/libraries/experimental_log/src/nrf_log_backend_uart.c",
@@ -90,9 +91,9 @@ __SRC = set([
     f"{SDK_ROOT}/external/segger_rtt/SEGGER_RTT.c",
     f"{SDK_ROOT}/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c",
     f"{SDK_ROOT}/external/segger_rtt/SEGGER_RTT_printf.c",
-])
+]
 
-__INC = set([
+__INC = [
     f"inc/socket",
     f"{SDK_ROOT}/components/iot/errno",
     f"{SDK_ROOT}/components/iot/socket/transport/lwip",
@@ -223,10 +224,31 @@ __INC = set([
     f"{SDK_ROOT}/components/libraries/atomic",
     f"{SDK_ROOT}/components/toolchain/cmsis/include",
     f"{SDK_ROOT}/components/ble/ble_dtm",
-])
+]
+
+__M = [
+    "BLE_STACK_SUPPORT_REQD",
+    "CONFIG_GPIO_AS_PINRESET",
+    "ENABLE_DEBUG_LOG_SUPPORT",
+    "FLOAT_ABI_HARD",
+    "LWIP_DONT_PROVIDE_BYTEORDER_FUNCTIONS",
+    "NRF52832_XXAA",
+    "NRF52_PAN_74",
+    "NRF_SD_BLE_API_VERSION=5",
+    "RETARGET_ENABLED=1",
+    "S132",
+    "SDK_MUTEX_ENABLE",
+    "SOFTDEVICE_PRESENT",
+    "SWI_DISABLE0",
+    "__HEAP_SIZE=0",
+]
+
 
 def add_socket_support():
-    common.SRC_FILES.update(__SRC)
-    common.INC_FOLDERS.update(__INC)
+    list_union(common.SRC_FILES, __SRC)
+    list_union(common.INC_FOLDERS, __INC)
+    list_union(common.MACRO, __M)
     common.SDK_CONFIG_FILE = "./config/socket/sdk_config.h"
+    common.BOARD = "BOARD_PCA10040"
     common.LINKER_SCRIPT = "./ld/socket/iot_socket_tcp_client_gcc_nrf52.ld"
+    common.SOFTDEVICE = f"{common.SDK_ROOT}/components/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex"

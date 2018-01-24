@@ -11,6 +11,7 @@ DEVICE_VARIANT = "xxaa"
 BOARD = "BOARD_PCA10036"
 SXXX = "s132"
 SDK_CONFIG_FILE = "./config/sdk_config.h"
+SOFTDEVICE = f"{SDK_ROOT}/components/softdevice/s112/hex/s112_nrf52810_5.1.0_softdevice.hex"
 
 MAKEFILE_INC = "_makefile"
 DEVICE_LC = DEVICE.lower()
@@ -20,77 +21,104 @@ TARGETS = f"{DEVICE_LC}_{DEVICE_VARIANT}"
 
 LINKER_SCRIPT = f"{SDK_ROOT}/components/toolchain/gcc/{DEVICE_LC}_{DEVICE_VARIANT}.ld"
 
-SRC_FILES = set([
-    "src/main.c",
-    "src/led.c",
+SRC_FILES = []
+INC_FOLDERS = []
+MACRO = []
+CFLAGS = []
+LDFLAGS = []
+LIB_FILES = []
 
-    f"{SDK_ROOT}/components/boards/boards.c",
-    f"{SDK_ROOT}/components/toolchain/system_{DEVICE_LC}.c",
-    f"{SDK_ROOT}/components/toolchain/gcc/gcc_startup_{DEVICE_LC}.S",
 
-    f"{SDK_ROOT}/components/libraries/util/app_util_platform.c",
-])
+def __add_base_src():
+    l = [
+        "src/main.c",
+    ]
+    __list_append(SRC_FILES, l)
 
-INC_FOLDERS = set([
-    f"{SDK_ROOT}/components/softdevice/{SXXX}/headers",
-    f"{SDK_ROOT}/components/device",
-    f"{SDK_ROOT}/components/boards",
-    f"{SDK_ROOT}/components/drivers_nrf/nrf_soc_nosd",
-    f"{SDK_ROOT}/components/libraries/util",
-    f"{SDK_ROOT}/components/drivers_nrf/hal",
-    f"{SDK_ROOT}/components/drivers_nrf/delay",
-    f"{SDK_ROOT}/components/toolchain",
-    f"{SDK_ROOT}/components/toolchain/gcc",
-    f"{SDK_ROOT}/components/toolchain/cmsis/include",
-    f"{SDK_ROOT}/components/serialization/application/codecs/ble/serializers",
-])
 
-MACRO = set([
-    f"{DEVICE}",
-    f"{BOARD}",
-])
+def __add_base_inc():
+    l = [
+        f"{SDK_ROOT}/components/libraries/balloc",
+        f"{SDK_ROOT}/components/libraries/experimental_log",
+        f"{SDK_ROOT}/components/libraries/experimental_log/src",
+        f"{SDK_ROOT}/components/libraries/experimental_memobj",
+        f"{SDK_ROOT}/components/libraries/experimental_section_vars",
+        f"{SDK_ROOT}/components/libraries/strerror",
+    ]
+    __list_append(INC_FOLDERS, l)
 
-CFLAGS = set([
-    "-Wall",
-    # "-Werror",
 
-    "-mcpu=cortex-m4",
-    "-mthumb",
-    "-mabi=aapcs",
-    "-mfpu=fpv4-sp-d16",
-    "-mfloat-abi=soft",
+def __add_base_macro():
+    l = [
+        DEVICE,
+        BOARD,
+    ]
+    __list_append(MACRO, l)
 
-    "-ffunction-sections",
-    "-fdata-sections",
-    "-fno-strict-aliasing",
-    "-fno-builtin",
-    "-fshort-enums",
-])
 
-LDFLAGS = set([
-    "-mthumb",
-    "-mabi=aapcs",
-    f"-L{TEMPLATE_PATH}",
-    "-mcpu=cortex-m4",
+def __add_base_flags():
+    l = [
+        "-Wall",
+        # "-Werror",
 
-    # let linker dump unused sections
-    "-Wl,--gc-sections",
+        "-mcpu=cortex-m4",
+        "-mthumb",
+        "-mabi=aapcs",
 
-    # use newlib in nano version
-    "--specs=nano.specs",
-])
+        "-mfpu=fpv4-sp-d16",
+        "-mfloat-abi=hard",
 
-LIB_FILES = set([
-    "-lc",
-    "-lnosys",
-    "-lm",
-])
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fno-strict-aliasing",
+        "-fno-builtin",
+        "-fshort-enums",
+    ]
+    __list_append(CFLAGS, l)
+
+
+def __add_base_ldflags():
+    l = [
+        "-mthumb",
+        "-mabi=aapcs",
+        f"-L{TEMPLATE_PATH}",
+        "-mcpu=cortex-m4",
+
+        "-mfpu=fpv4-sp-d16",
+        "-mfloat-abi=hard",
+
+        # let linker dump unused sections
+        "-Wl,--gc-sections",
+
+        # use newlib in nano version
+        "--specs=nano.specs",
+    ]
+    __list_append(LDFLAGS, l)
+
+
+def __add_base_libs():
+    l = [
+        "-lc",
+        "-lnosys",
+        "-lm",
+    ]
+    __list_append(LIB_FILES, l)
+
+
+def __ad_base():
+    __add_base_src()
+    __add_base_inc()
+    __add_base_macro()
+    __add_base_flags()
+    __add_base_ldflags()
+    __add_base_libs()
 
 
 def generate_makefile():
     if not os.path.exists(MAKEFILE_INC):
         os.mkdir(MAKEFILE_INC)
 
+    __ad_base()
     with open(f"{MAKEFILE_INC}/Makefile.common", "w") as fd:
         fd.writelines([
             f"DEVICE = {DEVICE}\n",
@@ -107,13 +135,14 @@ def generate_makefile():
             f"LINKER_SCRIPT = {LINKER_SCRIPT}\n",
 
             f"SDK_CONFIG_FILE := {SDK_CONFIG_FILE}\n",
+            f"SOFTDEVICE := {SOFTDEVICE}\n",
         ])
 
     with open(f"{MAKEFILE_INC}/Makefile.src", "w") as fd:
         fd.writelines([f"SRC_FILES += {x}\n" for x in SRC_FILES])
 
     with open(f"{MAKEFILE_INC}/Makefile.inc", "w") as fd:
-        INC_FOLDERS.add(os.path.dirname(SDK_CONFIG_FILE))
+        INC_FOLDERS.append(os.path.dirname(SDK_CONFIG_FILE))
         fd.writelines([f"INC_FOLDERS += {x}\n" for x in INC_FOLDERS])
 
     with open(f"{MAKEFILE_INC}/Makefile.flags", "w") as fd:
@@ -123,7 +152,7 @@ def generate_makefile():
         fd.writelines([f"ASMFLAGS += {x}\n" for x in CFLAGS])
         fd.writelines([f"ASMFLAGS += -D{x}\n" for x in MACRO])
 
-        LDFLAGS.add(f"-T{LINKER_SCRIPT}")
+        LDFLAGS.append(f"-T{LINKER_SCRIPT}")
         fd.writelines([f"LDFLAGS += {x}\n" for x in LDFLAGS])
 
     with open(f"{MAKEFILE_INC}/Makefile.lib", "w") as fd:
@@ -131,6 +160,7 @@ def generate_makefile():
 
 
 def generate_vim_syntastic():
+    __ad_base()
     with open("my.vim", "w") as fd:
         fd.write("let g:syntastic_c_compiler = 'arm-none-eabi-gcc'\n")
 
@@ -151,17 +181,34 @@ def generate_cscope():
     os.system(f"cscope -bq -i {cscope_files} -f cscope.out")
 
 
-def __set_remove(s: set, e):
+def __list_remove(s: list, e):
     if e in s:
         s.remove(e)
 
 
+def __list_append(ori: list, n: list):
+    for e in ori:
+        if e in n:
+            n.remove(e)
+    ori.extend(n)
+
+
+def list_union(ori: list, n: list):
+    for e in n:
+        if e in ori:
+            ori.remove(e)
+    ori.reverse()
+    n.reverse()
+    ori.extend(n)
+    ori.reverse()
+
+
 def set_debug(debug: bool):
     if debug:
-        __set_remove(CFLAGS, "-O3")
-        MACRO.add("DEBUG")
-        CFLAGS.add("-O -ggdb")
+        __list_remove(CFLAGS, "-O3")
+        MACRO.append("DEBUG")
+        CFLAGS.append("-O -ggdb")
     else:
-        CFLAGS.add("-O3")
-        __set_remove(MACRO, "DEBUG")
-        __set_remove(CFLAGS, "-O -ggdb")
+        CFLAGS.append("-O3")
+        __list_remove(MACRO, "DEBUG")
+        __list_remove(CFLAGS, "-O -ggdb")

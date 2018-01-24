@@ -1,7 +1,7 @@
 #include "led.h"
 
 
-static void
+void
 print_mac_address() {
   dlog("%x %x\n", NRF_FICR->DEVICEADDR[0], NRF_FICR->DEVICEADDR[1]);
 }
@@ -16,7 +16,7 @@ led_blinking() {
       bsp_board_led_invert(i);
       nrf_delay_ms(500);
 
-      print_mac_address();
+      // print_mac_address();
     }
   }
 }

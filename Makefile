@@ -31,7 +31,7 @@ flash: $(OUTPUT_DIRECTORY)/$(TARGETS).hex
 # Flash softdevice
 flash_softdevice:
 	@echo Flashing: s112_nrf52810_5.1.0_softdevice.hex
-	nrfjprog -f nrf52 --program $(SDK_ROOT)/components/softdevice/s112/hex/s112_nrf52810_5.1.0_softdevice.hex --sectorerase
+	nrfjprog -f nrf52 --program $(SOFTDEVICE) --sectorerase
 	nrfjprog -f nrf52 --reset
 
 erase:
