@@ -19,7 +19,8 @@ OUTPUT_DIRECTORY = "_build"
 TEMPLATE_PATH = f"{SDK_ROOT}/components/toolchain/gcc"
 TARGETS = f"{DEVICE_LC}_{DEVICE_VARIANT}"
 
-LINKER_SCRIPT = f"{SDK_ROOT}/components/toolchain/gcc/{DEVICE_LC}_{DEVICE_VARIANT}.ld"
+# LINKER_SCRIPT = f"{SDK_ROOT}/components/toolchain/gcc/{DEVICE_LC}_{DEVICE_VARIANT}.ld"
+LINKER_SCRIPT = "./ld/nrf.ld"
 
 SRC_FILES = []
 INC_FOLDERS = []
@@ -32,18 +33,17 @@ LIB_FILES = []
 def __add_base_src():
     l = [
         "src/main.c",
+        "src/my_init.c",
+
+        f"{SDK_ROOT}/components/toolchain/system_{DEVICE_LC}.c",
+        f"{SDK_ROOT}/components/toolchain/gcc/gcc_startup_{DEVICE_LC}.S",
     ]
     __list_append(SRC_FILES, l)
 
 
 def __add_base_inc():
     l = [
-        f"{SDK_ROOT}/components/libraries/balloc",
-        f"{SDK_ROOT}/components/libraries/experimental_log",
-        f"{SDK_ROOT}/components/libraries/experimental_log/src",
-        f"{SDK_ROOT}/components/libraries/experimental_memobj",
-        f"{SDK_ROOT}/components/libraries/experimental_section_vars",
-        f"{SDK_ROOT}/components/libraries/strerror",
+        "src",
     ]
     __list_append(INC_FOLDERS, l)
 
@@ -52,6 +52,9 @@ def __add_base_macro():
     l = [
         DEVICE,
         BOARD,
+        "NRF_LOG_ENABLED",
+        "NRF52832_XXAA",
+        SXXX.upper()
     ]
     __list_append(MACRO, l)
 

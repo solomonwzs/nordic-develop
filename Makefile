@@ -16,6 +16,8 @@ include _makefile/Makefile.lib
 
 default: $(TARGETS)
 
+VERBOSE = 0
+PRETTY = 1
 include $(TEMPLATE_PATH)/Makefile.common
 
 $(foreach target, $(TARGETS), $(call define_target, $(target)))

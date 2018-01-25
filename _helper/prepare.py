@@ -11,11 +11,13 @@ from common import (
 from segger_rtt import add_rtt_support
 from socket import add_socket_support
 from led import add_led_support
+from log import add_log_support
 
 
 if __name__ == "__main__":
     add_led_support()
     add_rtt_support()
+    add_log_support()
     # add_socket_support()
 
     if len(sys.argv) > 1:
