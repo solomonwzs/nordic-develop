@@ -1234,7 +1234,7 @@
 // <e> PEER_MANAGER_ENABLED - peer_manager - Peer Manager
 //==========================================================
 #ifndef PEER_MANAGER_ENABLED
-#define PEER_MANAGER_ENABLED 0
+#define PEER_MANAGER_ENABLED 1
 #endif
 // <o> PM_MAX_REGISTRANTS  
 // <i> Number of event handlers that can be registered.
@@ -1298,7 +1298,7 @@
  
 
 #ifndef BLE_CTS_C_ENABLED
-#define BLE_CTS_C_ENABLED 0
+#define BLE_CTS_C_ENABLED 1
 #endif
 
 // <q> BLE_DIS_ENABLED  - ble_dis - Device Information Service
@@ -3196,7 +3196,7 @@
 // <e> APP_SCHEDULER_ENABLED - app_scheduler - Events scheduler
 //==========================================================
 #ifndef APP_SCHEDULER_ENABLED
-#define APP_SCHEDULER_ENABLED 0
+#define APP_SCHEDULER_ENABLED 1
 #endif
 // <q> APP_SCHEDULER_WITH_PAUSE  - Enabling pause feature
  
@@ -3217,7 +3217,7 @@
 // <e> APP_TIMER_ENABLED - app_timer - Application timer functionality
 //==========================================================
 #ifndef APP_TIMER_ENABLED
-#define APP_TIMER_ENABLED 0
+#define APP_TIMER_ENABLED 1
 #endif
 // <o> APP_TIMER_CONFIG_RTC_FREQUENCY  - Configure RTC prescaler.
  
@@ -3396,7 +3396,7 @@
 // <e> FDS_ENABLED - fds - Flash data storage module
 //==========================================================
 #ifndef FDS_ENABLED
-#define FDS_ENABLED 0
+#define FDS_ENABLED 1
 #endif
 // <h> Pages - Virtual page settings
 
@@ -3875,7 +3875,7 @@
 // <e> NRF_FSTORAGE_ENABLED - nrf_fstorage - Flash abstraction library
 //==========================================================
 #ifndef NRF_FSTORAGE_ENABLED
-#define NRF_FSTORAGE_ENABLED 0
+#define NRF_FSTORAGE_ENABLED 1
 #endif
 // <h> nrf_fstorage_sd - Implementation using the SoftDevice.
 
@@ -8225,7 +8225,7 @@
 // <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
 
 #ifndef NRF_SDH_BLE_OBSERVER_PRIO_LEVELS
-#define NRF_SDH_BLE_OBSERVER_PRIO_LEVELS 3
+#define NRF_SDH_BLE_OBSERVER_PRIO_LEVELS 4
 #endif
 
 // <h> BLE Observers priorities - Invididual priorities

@@ -37,6 +37,34 @@ def __add_base_src():
 
         f"{SDK_ROOT}/components/toolchain/system_{DEVICE_LC}.c",
         f"{SDK_ROOT}/components/toolchain/gcc/gcc_startup_{DEVICE_LC}.S",
+
+        f"{SDK_ROOT}/components/ble/ble_services/ble_cts_c/ble_cts_c.c",
+        f"{SDK_ROOT}/components/libraries/bsp/bsp.c",
+        f"{SDK_ROOT}/components/libraries/timer/app_timer.c",
+        f"{SDK_ROOT}/components/libraries/scheduler/app_scheduler.c",
+        f"{SDK_ROOT}/components/libraries/scheduler/app_scheduler.c",
+        f"{SDK_ROOT}/components/libraries/experimental_section_vars/nrf_section_iter.c",
+        f"{SDK_ROOT}/components/libraries/util/sdk_mapped_flags.c",
+        f"{SDK_ROOT}/components/libraries/fds/fds.c",
+        f"{SDK_ROOT}/components/libraries/fstorage/nrf_fstorage.c",
+        f"{SDK_ROOT}/components/libraries/atomic_fifo/nrf_atfifo.c",
+
+        f"{SDK_ROOT}/components/ble/peer_manager/peer_manager.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/peer_id.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/security_manager.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/security_dispatcher.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/id_manager.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/peer_database.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/pm_buffer.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/pm_mutex.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/gatts_cache_manager.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/gatt_cache_manager.c",
+        f"{SDK_ROOT}/components/ble/peer_manager/peer_data_storage.c",
+
+        f"{SDK_ROOT}/components/softdevice/common/nrf_sdh.c",
+        f"{SDK_ROOT}/components/softdevice/common/nrf_sdh_ble.c",
+
+        f"{SDK_ROOT}/components/ble/common/ble_conn_state.c",
     ]
     __list_append(SRC_FILES, l)
 
@@ -44,6 +72,23 @@ def __add_base_src():
 def __add_base_inc():
     l = [
         "src",
+
+        f"{SDK_ROOT}/components/libraries/bsp",
+        f"{SDK_ROOT}/components/libraries/button",
+
+        f"{SDK_ROOT}/components/libraries/timer",
+
+        f"{SDK_ROOT}/components/ble/peer_manager",
+        f"{SDK_ROOT}/components/ble/common",
+        f"{SDK_ROOT}/components/ble/ble_services/ble_cts_c",
+        f"{SDK_ROOT}/components/ble/ble_db_discovery",
+
+        f"{SDK_ROOT}/components/libraries/scheduler",
+        f"{SDK_ROOT}/components/libraries/fds",
+        f"{SDK_ROOT}/components/libraries/atomic_fifo",
+        f"{SDK_ROOT}/components/libraries/fstorage",
+
+        f"{SDK_ROOT}/components/softdevice/common",
     ]
     __list_append(INC_FOLDERS, l)
 
@@ -54,7 +99,8 @@ def __add_base_macro():
         BOARD,
         "NRF_LOG_ENABLED",
         "NRF52832_XXAA",
-        SXXX.upper()
+        SXXX.upper(),
+        "NRF_SD_BLE_API_VERSION=5",
     ]
     __list_append(MACRO, l)
 

@@ -30,11 +30,17 @@ wait_key() {
 
 int
 main(int argc, char **argv) {
-  log_init();
-  NRF_LOG_INFO("Current Time service client started.");
-  dlog("Current Time service client started.\n");
-
-  // gap_params_init();
+  /* log_init(); */
+  /* dlog("start...\n"); */
+  /* timers_init(); */
+  /* dlog("start...\n"); */
+  /* scheduler_init(); */
+  /* dlog("start...\n"); */
+  /* ble_stack_init(); */
+  /* dlog("start...\n"); */
+  /* gap_params_init(); */
+  dlog("start...\n");
+  print_mac_address();
   led_blinking();
   // print_mac_address();
 

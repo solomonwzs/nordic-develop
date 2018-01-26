@@ -18,6 +18,13 @@
 #define CONN_SUP_TIMEOUT MSEC_TO_UNITS(4000, UNIT_10_MS)
 
 extern void gap_params_init();
+
 extern void log_init();
+
+extern void timers_init();
+
+extern void scheduler_init();
+
+extern void ble_stack_init();
 
 #endif
