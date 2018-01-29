@@ -6,12 +6,14 @@ import sys
 
 
 SDK_ROOT = "/home/solomon/workspace/bluetooth/nRF5_SDK_14.2.0_17b948a"
+# SDK_ROOT = "/home/solomon/workspace/bluetooth/nRF5_SDK_14.0.0_3bcc1f7"
 DEVICE = "NRF52"
 DEVICE_VARIANT = "xxaa"
-BOARD = "BOARD_PCA10036"
+BOARD = "BOARD_PCA10040"
 SXXX = "s132"
 SDK_CONFIG_FILE = "./config/sdk_config.h"
-SOFTDEVICE = f"{SDK_ROOT}/components/softdevice/s112/hex/s112_nrf52810_5.1.0_softdevice.hex"
+# SOFTDEVICE = f"{SDK_ROOT}/components/softdevice/s112/hex/s112_nrf52810_5.1.0_softdevice.hex"
+SOFTDEVICE = f"{SDK_ROOT}/components/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex"
 
 MAKEFILE_INC = "_makefile"
 DEVICE_LC = DEVICE.lower()

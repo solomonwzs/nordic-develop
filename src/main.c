@@ -3,6 +3,7 @@
 #include "my_led.h"
 #include "nrf_delay.h"
 #include "nrf_log.h"
+#include "nrf_log_ctrl.h"
 #include "nrf_nvic.h"
 #include "utils.h"
 
@@ -30,15 +31,15 @@ wait_key() {
 
 int
 main(int argc, char **argv) {
-  /* log_init(); */
-  /* dlog("start...\n"); */
-  /* timers_init(); */
-  /* dlog("start...\n"); */
-  /* scheduler_init(); */
-  /* dlog("start...\n"); */
-  /* ble_stack_init(); */
-  /* dlog("start...\n"); */
-  /* gap_params_init(); */
+  log_init();
+  dlog("start...\n");
+  timers_init();
+  dlog("start...\n");
+  scheduler_init();
+  dlog("start...\n");
+  ble_stack_init();
+  dlog("start...\n");
+  gap_params_init();
   dlog("start...\n");
   print_mac_address();
   led_blinking();

@@ -114,7 +114,6 @@ void
 ble_stack_init() {
   ret_code_t err_code;
 
-  dlog("start...\n");
   err_code = nrf_sdh_enable_request();
   APP_ERROR_CHECK(err_code);
 

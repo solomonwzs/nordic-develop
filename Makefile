@@ -32,7 +32,7 @@ flash: $(OUTPUT_DIRECTORY)/$(TARGETS).hex
 
 # Flash softdevice
 flash_softdevice:
-	@echo Flashing: s112_nrf52810_5.1.0_softdevice.hex
+	@echo Flashing: $(SOFTDEVICE)
 	nrfjprog -f nrf52 --program $(SOFTDEVICE) --sectorerase
 	nrfjprog -f nrf52 --reset
 
