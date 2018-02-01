@@ -59,7 +59,7 @@
 
 #define DEAD_BEEF                       0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
-
+APP_TIMER_DEF(m_sec_req_timer_id);
 NRF_BLE_GATT_DEF(m_gatt);                                                       /**< GATT module instance. */
 BLE_ADVERTISING_DEF(m_advertising);                                             /**< Advertising module instance. */
 
@@ -194,6 +194,12 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
 }
 
 
+static void
+timer_timeout_handler(void *p_context) {
+  NRF_LOG_INFO("timer timeout");
+}
+
+
 /**@brief Function for the Timer initialization.
  *
  * @details Initializes the timer module. This creates and starts application timers.
@@ -210,9 +216,9 @@ void timers_init(void)
                  Below is an example of how to create a timer.
                  For every new timer needed, increase the value of the macro APP_TIMER_MAX_TIMERS by
                  one.
-       ret_code_t err_code;
-       err_code = app_timer_create(&m_app_timer_id, APP_TIMER_MODE_REPEATED, timer_timeout_handler);
-       APP_ERROR_CHECK(err_code); */
+       ret_code_t err_code; */
+    err_code = app_timer_create(&m_sec_req_timer_id, APP_TIMER_MODE_REPEATED, timer_timeout_handler);
+    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -250,11 +256,17 @@ void gap_params_init(void)
 }
 
 
+static void
+gatt_event_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt) {
+  dlog("gatt_event_handler\n");
+}
+
+
 /**@brief Function for initializing the GATT module.
  */
-void gatt_init(void)
-{
-    ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, NULL);
+void
+gatt_init(void) {
+    ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, gatt_event_handler);
     APP_ERROR_CHECK(err_code);
 }
 
